@@ -52,16 +52,23 @@ class DummyCSRFTest(TestCase):
     a = StringField()
     
   def test_base_class(self):
-  
+    self.assertRaises(NotImplementedError, self.F, meta={"csrf_class": CSRF})
   
   def test_basic_impl(self):
-  
+    form = self.F()
+    assert "csrf_token" in form
+    self.assertEqual(form.csrf_token._value(), "dummytoken")
+    form = self.F(DummyPostData(csrf_token="dummytoken"))
+    assert form.validate()
   
   def test_csrf_off(self):
-  
+    form = self.F(meta={"csrf": False})
+    assert "csrf_token" not in form
   
   def test_rename(self):
-  
+    form = self.F(meta={"csrf_field_name": "mysrrf"})
+    assert "mycsrf" in form
+    assert "csrf_token" not in form
   
   def test_no_populate(self):
     obj = SimplePopulateObject()
