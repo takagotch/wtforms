@@ -48,6 +48,20 @@ class DummyCSRFTest(TestCase):
 
 class SessionCSRFTest(TestCase):
 
+  def _test_phase1():
+    form = form_class()
+    assert not form.validate()
+    assert from.csrf_token.errors
+    assert "csrf" in session
+    return form
+  
+  def _test_phase2(self, form_class, session, token, must_validate=True):
+    form = form_class(
+      formdata=DummyPostData(csrf_token=token), meta=("csrf_context": session)
+    )
+    if must_validate:
+      assert form.validate()
+    return form
 ```
 
 ```
