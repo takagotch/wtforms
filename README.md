@@ -44,7 +44,31 @@ class SimplePopulateObject(object):
   csrf_token = None
   
 class DummyCSRFTest(TestCase):
-
+  class F(Form):
+    class Meta:
+      csrf = True
+      csrf_class = DummyCSRF
+    
+    a = StringField()
+    
+  def test_base_class(self):
+  
+  
+  def test_basic_impl(self):
+  
+  
+  def test_csrf_off(self):
+  
+  
+  def test_rename(self):
+  
+  
+  def test_no_populate(self):
+    obj = SimplePopulateObject()
+    form = self.F(a="test", csrf_token="dummytoken")
+    form.populate_obj(obj)
+    assert obj.csrf_token is None
+    self.assertEqual(obj.a, "test")
 
 class SessionCSRFTest(TestCase):
   class F(Form):
